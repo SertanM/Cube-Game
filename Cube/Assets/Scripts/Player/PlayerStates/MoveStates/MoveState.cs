@@ -6,7 +6,10 @@ namespace CubeGame.Player
     {
         internal MoveState(Vector2 moveVector) : base(moveVector) {}
 
-        protected override float _rotation { get; set; } = 90f; // I will add to some data container instead of this
+        // I will add to some data containers (like Scriptable objects) instead of that
+        // But today I am so lazy for it :D
+
+        protected override float _rotation { get; set; } = 90f;  
         protected override float _moveVectorYOffset { get; set; } = -1f;
         protected override float _targetPositonYOffset { get; set; } = 0f;
         

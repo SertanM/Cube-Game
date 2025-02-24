@@ -28,16 +28,5 @@ namespace CubeGame.Player
             currentState = newState;
             currentState.EnterState(this);
         }
-
-        internal bool CheckSphere(Vector3 targetPos, GameManager gameManager)
-        {
-            foreach (var pos in gameManager.positions)
-                if (targetPos.x == pos.x || gameManager.lockPos == LockPos.X)
-                    if (targetPos.y == pos.y)
-                        if (targetPos.z == pos.z || gameManager.lockPos == LockPos.Z)
-                            return true;
-
-            return false;
-        }
     }
 }

@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace CubeGame.Camera
 {
-    internal abstract class RotateCameraBaseClass : CameraState
+    internal abstract class RotateCameraBaseClass : ICameraState
     {
         protected abstract float rotationDegree { get; set; }
         protected abstract int increaseAmount { get; set; }
-        void CameraState.EnterState(CameraManager camera)
+        void ICameraState.EnterState(CameraManager camera)
         {
             RotateCamera(camera);
         }
@@ -28,19 +28,16 @@ namespace CubeGame.Camera
             });
         }
 
-        void CameraState.UpdateState(CameraManager camera) { }
+        void ICameraState.UpdateState(CameraManager camera) { }
 
-        void CameraState.ExitState(CameraManager camera)
+        void ICameraState.ExitState(CameraManager camera)
         {
             SetLookDirection(camera);
             SetCam2IdleState(camera);
         }
 
-        private static void SetCam2IdleState(CameraManager camera)
-        {
-            camera.transform.localScale = Vector3.one;
-            camera.player.ChangeState(new IdleState());
-        }
+        private static void SetCam2IdleState(CameraManager camera) => camera.player.ChangeState(new IdleState());
+        
 
         private void SetLookDirection(CameraManager camera)
         {

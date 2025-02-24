@@ -4,10 +4,8 @@ namespace CubeGame.Player
 {
     internal sealed class DropState : IPlayerState
     {
-        void IPlayerState.EnterState(PlayerManager player)
-        {
-            SetDrop(player);
-        }
+        void IPlayerState.EnterState(PlayerManager player) =>  SetDrop(player);
+        
 
         private static void SetDrop(PlayerManager player)
         {

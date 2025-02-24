@@ -7,9 +7,12 @@ namespace CubeGame.Camera
 {
     internal sealed class CameraManager : MonoBehaviour
     {
-        private CameraState currentState = null;
+        private ICameraState currentState = null;
         [Inject] internal GameManager gameManager;
         [Inject] internal PlayerManager player;
+
+        [Header("---Settings---")]
+        [SerializeField] internal CameraSettings cameraSettings;
 
         private void OnEnable()
         {
@@ -21,7 +24,7 @@ namespace CubeGame.Camera
             => currentState.UpdateState(this);
         
 
-        internal void ChangeState(CameraState newState)
+        internal void ChangeState(ICameraState newState)
         {
             currentState.ExitState(this);
             currentState = newState;

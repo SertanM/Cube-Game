@@ -18,12 +18,8 @@ namespace CubeGame.Player
             _targetQuaternion = new Vector3(_rotation * moveVector.y, 0f, -_rotation * moveVector.x);
         }
 
-
-        void IPlayerState.EnterState(PlayerManager player)
-        {
-            MovePlayer(player);
-        }
-
+        void IPlayerState.EnterState(PlayerManager player) =>  MovePlayer(player);
+        
 
         private void MovePlayer(PlayerManager player)
         {
@@ -43,7 +39,7 @@ namespace CubeGame.Player
                     GameObject.Destroy(pivotObject);
 
 
-                    // Its just for some fixing
+                    // Its just for some fixing float errors
                     player.transform.position = _targetPosition;
                     player.transform.rotation = Quaternion.identity;
                     player.transform.localScale = Vector3.one;

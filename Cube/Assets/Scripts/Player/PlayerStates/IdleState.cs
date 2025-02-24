@@ -11,12 +11,12 @@ namespace CubeGame.Player
             SetUpLockPos(player);
             SetLockedPos(player);
             CheckIsWillDrop(player);
-            ChecKIsWillTeleportOnLockedPos(player);
+            ChecKIsWillTeleport(player);
         }
 
         private void SetLockedPos(PlayerManager player)
         {
-            float nearestValue = CheckNearestLockedPoint(player.transform.position, player.gameManager);
+            float nearestValue = player.gameManager.CheckNearestBlockPos(player.transform.position);
 
             if (nearestValue != Mathf.Infinity && nearestValue != -Mathf.Infinity)
                 player.gameManager.lockPos = LockPos.None;
@@ -35,15 +35,15 @@ namespace CubeGame.Player
         private static void CheckIsWillDrop(PlayerManager player)
         {
             Vector3 targetPos = player.transform.position + Vector3.down;
-            if (!CheckIsThereSphere(targetPos, player.gameManager))
+            if (!player.gameManager.CheckIsThereABlock(targetPos))
                 player.ChangeState(new DropState());
         }
 
-        private static void ChecKIsWillTeleportOnLockedPos(PlayerManager player)
+        private static void ChecKIsWillTeleport(PlayerManager player)
         {
             Vector3 targetPos = player.transform.position + Vector3.down;
 
-            float nearestValue = CheckNearestLockedPoint(targetPos, player.gameManager);
+            float nearestValue = player.gameManager.CheckNearestBlockPos(targetPos);
 
             LockPos lockPos = player.gameManager.lockPos;
 
@@ -63,10 +63,8 @@ namespace CubeGame.Player
             player.transform.position = newPos;
         }
 
-        void IPlayerState.UpdateState(PlayerManager player)
-        {
-            CheckIsWillMove(player);
-        }
+        void IPlayerState.UpdateState(PlayerManager player) =>  CheckIsWillMove(player);
+        
 
         private static void CheckIsWillMove(PlayerManager player)
         {
@@ -102,7 +100,7 @@ namespace CubeGame.Player
         {
             Vector3 targetPos = player.transform.position + new Vector3(moveVector.x, 0f, moveVector.y);
 
-            if (!CheckIsThereSphere(targetPos, player.gameManager))
+            if (!player.gameManager.CheckIsThereABlock(targetPos))
             {
                 player.ChangeState(new MoveState(moveVector));
                 return;
@@ -110,73 +108,11 @@ namespace CubeGame.Player
 
             targetPos.y += 1f;
 
-            if (!CheckIsThereSphere(targetPos, player.gameManager))
+            if (!player.gameManager.CheckIsThereABlock(targetPos))
             {
                 player.ChangeState(new MoveUpState(moveVector));
                 return;
             }
-        }
-
-
-        private static bool CheckIsThereSphereWithoutLockedPos(Vector3 targetPos, List<Vector3> positions)
-        {
-            foreach (var pos in positions)
-                if (targetPos == pos)
-                    return true;
-
-            return false;
-        }
-
-        private static bool CheckIsThereSphere(Vector3 targetPos, GameManager gameManager)
-        {
-            LockPos lockPos = gameManager.lockPos;
-            List<Vector3> positions = gameManager.positions;
-
-            foreach (var pos in positions)
-                if (targetPos.x == pos.x || lockPos == LockPos.X)
-                    if (targetPos.y == pos.y)
-                        if (targetPos.z == pos.z || lockPos == LockPos.Z)
-                            return true;
-
-            return false;
-        }
-
-        private static float CheckNearestLockedPoint(Vector3 targetPos, GameManager gameManager)
-        {
-            LockPos lockPos = gameManager.lockPos;
-            LookDirection lookDirection = gameManager.lookDirection;
-
-            bool isSmaller = lookDirection == LookDirection.Forward || lookDirection == LookDirection.Left;
-            
-            List<Vector3> positions = gameManager.positions;
-
-            float nearestPos = isSmaller ? Mathf.Infinity : -Mathf.Infinity;
-
-            foreach (var pos in positions) 
-            {
-                if (!(targetPos.x == pos.x || lockPos == LockPos.X))
-                    continue;
-
-                if (targetPos.y != pos.y)
-                    continue;
-
-                if (!(targetPos.z == pos.z || lockPos == LockPos.Z))
-                    continue;
-
-                
-                float newPos = lockPos == LockPos.Z ? pos.z : pos.x;
-
-                if (isSmaller)
-                    if (newPos < nearestPos)
-                        nearestPos = newPos;
-
-                if (!isSmaller)
-                    if (newPos > nearestPos)
-                        nearestPos = newPos;
-            }
-
-            
-            return nearestPos;
         }
 
         void IPlayerState.ExitState(PlayerManager player) { }

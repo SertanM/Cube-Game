@@ -1,6 +1,6 @@
 ﻿namespace CubeGame.Camera
 {
-    internal interface CameraState
+    internal interface ICameraState
     {
         internal void EnterState(CameraManager camera);
         internal void UpdateState(CameraManager camera);

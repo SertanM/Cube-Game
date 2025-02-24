@@ -3,11 +3,11 @@ using CubeGame.Player;
 
 namespace CubeGame.Camera
 {
-    internal sealed class IdleCameraState : CameraState
+    internal sealed class IdleCameraState : ICameraState
     {
-        void CameraState.EnterState(CameraManager camera) { }
+        void ICameraState.EnterState(CameraManager camera) { }
 
-        void CameraState.UpdateState(CameraManager camera)
+        void ICameraState.UpdateState(CameraManager camera)
         {
             FollowPlayer(camera);
             CheckChanges(camera);
@@ -16,14 +16,14 @@ namespace CubeGame.Camera
         private static void FollowPlayer(CameraManager camera)
         {
             Vector3 playerPos = camera.player.transform.position;
-            LookDirection lockDirection = camera.gameManager.lookDirection;
-            float camDistance = camera.player.playerSettings.camDistance;
+            LookDirection lookDirection = camera.gameManager.lookDirection;
+            float camDistance = camera.cameraSettings.camDistance;
 
             Vector3 nextPos = new Vector3
                 (
-                    lockDirection == LookDirection.Left ? -camDistance : lockDirection == LookDirection.Right ? camDistance : playerPos.x,
+                    playerPos.x + (lookDirection == LookDirection.Left ? -camDistance : lookDirection == LookDirection.Right ? camDistance : 0f),
                     playerPos.y,
-                    lockDirection == LookDirection.Forward ? -camDistance : lockDirection == LookDirection.Backward ? playerPos.z + camDistance : playerPos.z
+                    playerPos.z + (lookDirection == LookDirection.Forward ? -camDistance : lookDirection == LookDirection.Backward ? camDistance : 0f)
                 );
 
             camera.transform.position = nextPos;
@@ -47,6 +47,6 @@ namespace CubeGame.Camera
             }
         }
 
-        void CameraState.ExitState(CameraManager camera) { }
+        void ICameraState.ExitState(CameraManager camera) { }
     }
 }

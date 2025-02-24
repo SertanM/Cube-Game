@@ -13,7 +13,10 @@ namespace CubeGame.Player
         [SerializeField] internal float gravitySpeed = .2f;
         [SerializeField] internal float camRotationSpeed = .4f;
 
-        [Header("---Camera Settings---")]
-        [SerializeField] internal float camDistance = 20f;
+        // Also I think it shouldn't be in here 
+        // But I was said I am to lazy for it today
+        // And I dont want to get angry with that
+
+
     }
 }
